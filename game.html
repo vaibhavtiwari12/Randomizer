@@ -1,3 +1,30 @@
+<!--
+-- @Author - Vaibhav Tiwari (842309)
+-- @Description - This program randomizes the strings and shuffle them to form the chart for the Mathces between the teams.
+
+MIT License
+
+Copyright (c) 2016 Vaibhav Tiwari
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+
 <!DOCTYPE html>
 <html>
     <head>
@@ -6,7 +33,7 @@
         <link rel=stylesheet href="game.css" type="text/css"/>
         <meta charset="utf-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
     </head>
     <body ng-app="myApp">
         <div ng-controller="gameController">
@@ -45,92 +72,90 @@
                     <div class="flex justify-center align-center flex-100">{{match.team_one}}</div>
                     <div class="flex justify-center align-center flex-100">vs</div>
                     <div class="flex justify-center align-center flex-100" data-ng-show="match.team_two!=
-undefined">{{match.team_two}}</div>
+                                                                                         undefined">{{match.team_two}}</div>
                     <div class="flex justify-center align-center flex-100" data-ng-show="match.team_two==
-undefined">To be announced</div>
+                                                                                         undefined">To be announced</div>
                 </div>
             </div>
             <!----------------------------------------------- Result Page------------------------------------------>
         </div>
-
-        </div>
-    <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular.min.js"></script>
-    <script>
-        var app = angular.module('myApp',[]);
-        app.controller('gameController',['$scope',function($scope){
-            /***************Key Press Check Start****************/
-            $(document).ready(function(){
-                $('#nameInput').keypress(function(e){
-                    if(e.keyCode==13)
-                        $('#submit').click();
+        <script src="https://code.jquery.com/jquery-1.12.4.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.0/angular.min.js"></script>
+        <script>
+            var app = angular.module('myApp',[]);
+            app.controller('gameController',['$scope',function($scope){
+                /***************Key Press Check Start****************/
+                $(document).ready(function(){
+                    $('#nameInput').keypress(function(e){
+                        if(e.keyCode==13)
+                            $('#submit').click();
+                    });
                 });
-            });
-            $scope.mainPage = true;
-            /***************Key Press Check End****************/
-            /***************The Ramdomizer ;) Start**************/
-            var randomize = function shuffle(array) {
-                var currentIndex = array.length, temporaryValue, randomIndex;
-                while (0 !== currentIndex) {
-                    randomIndex = Math.floor(Math.random() * currentIndex);
-                    currentIndex -= 1;
-                    temporaryValue = array[currentIndex];
-                    array[currentIndex] = array[randomIndex];
-                    array[randomIndex] = temporaryValue;
+                $scope.mainPage = true;
+                /***************Key Press Check End****************/
+                /***************The Ramdomizer ;) Start**************/
+                var randomize = function shuffle(array) {
+                    var currentIndex = array.length, temporaryValue, randomIndex;
+                    while (0 !== currentIndex) {
+                        randomIndex = Math.floor(Math.random() * currentIndex);
+                        currentIndex -= 1;
+                        temporaryValue = array[currentIndex];
+                        array[currentIndex] = array[randomIndex];
+                        array[randomIndex] = temporaryValue;
+                    }
+                    return array;
                 }
-                return array;
-            }
-            /***************The Ramdomizer ;) End **************/
-            $scope.playerArray = [];
-            var playerArray=[];
-            /**************** The Accepter Start*****************/
-            $scope.submit = function(){
-                if($scope.teamName!=null && $scope.teamName!=""){
-                    playerArray.push($scope.teamName);
-                    playerArray = playerArray.filter(function(elem, index, self) {
-                        return index == self.indexOf(elem);
-                    })
-                    console.log(playerArray);
-                    $scope.playerArray = playerArray;
-                    $('#nameInput').val('');
-                    $scope.teamName=null;
-                    $scope.showArrayList=true;
-                    $('.displayArray').show(100);
+                /***************The Ramdomizer ;) End **************/
+                $scope.playerArray = [];
+                var playerArray=[];
+                /**************** The Accepter Start*****************/
+                $scope.submit = function(){
+                    if($scope.teamName!=null && $scope.teamName!=""){
+                        playerArray.push($scope.teamName);
+                        playerArray = playerArray.filter(function(elem, index, self) {
+                            return index == self.indexOf(elem);
+                        })
+                        console.log(playerArray);
+                        $scope.playerArray = playerArray;
+                        $('#nameInput').val('');
+                        $scope.teamName=null;
+                        $scope.showArrayList=true;
+                        $('.displayArray').show(100);
+                    }
                 }
-            }
-            /**************** The Accepter End*****************/
-            /**************** Remove Element from Array start*******/
-            $scope.remove = function(item) { 
-                var index = $scope.playerArray.indexOf(item);
-                $scope.playerArray.splice(index, 1); 
-                playerArray=$scope.playerArray;
-            }
-            /**************** Remove Element from Array End*******/
-            /***** This is The heart -The Randomizer! start*******/
-            $scope.randomizer = function(){
-                randomize(playerArray);
-                $scope.matchArray=[];
-                for(i=0;i<playerArray.length;i++){
-                    var matchObj={
-                        team_one : playerArray[i],
-                        team_two : playerArray[i+1]
-                    }; 
-                    $scope.matchArray.push(matchObj);
-                    i++;
+                /**************** The Accepter End*****************/
+                /**************** Remove Element from Array start*******/
+                $scope.remove = function(item) { 
+                    var index = $scope.playerArray.indexOf(item);
+                    $scope.playerArray.splice(index, 1); 
+                    playerArray=$scope.playerArray;
                 }
-                $('#ResultPage').show(200);
-                $scope.mainPage = false;
-                console.log("Final Object ");
-                console.log($scope.matchArray);
-            }
-            /***** This is The heart -The Randomizer! End*******/
-            /***** For going back! Start*******/
-            $scope.takemeback=function(){
-              $('#ResultPage').hide(200);  
-              $scope.mainPage = true;
-            }
-            /***** For going back! End*******/
-        }]);
-    </script>
+                /**************** Remove Element from Array End*******/
+                /***** This is The heart - SHUFFLE! start*******/
+                $scope.randomizer = function(){
+                    randomize(playerArray);
+                    $scope.matchArray=[];
+                    for(i=0;i<playerArray.length;i++){
+                        var matchObj={
+                            team_one : playerArray[i],
+                            team_two : playerArray[i+1]
+                        }; 
+                        $scope.matchArray.push(matchObj);
+                        i++;
+                    }
+                    $('#ResultPage').show(200);
+                    $scope.mainPage = false;
+                    console.log("Final Object ");
+                    console.log($scope.matchArray);
+                }
+                /***** This is The heart - SHUFFLE! End*******/
+                /***** For going back! Start*******/
+                $scope.takemeback=function(){
+                    $('#ResultPage').hide(200);  
+                    $scope.mainPage = true;
+                }
+                /***** For going back! End*******/
+            }]);
+        </script>
     </body>
 </html>
